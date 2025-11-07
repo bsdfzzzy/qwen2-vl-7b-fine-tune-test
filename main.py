@@ -98,6 +98,10 @@ def main():
   )
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
+  print("Tokenizer special tokens检查:")
+  print(f"Pad token ID: {processor.tokenizer.pad_token_id}")
+  print(f"Model config Pad token ID: {model.config.pad_token_id}")
+
   peft_config = LoraConfig(
     lora_alpha=16,
     lora_dropout=0.05,
