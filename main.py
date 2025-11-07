@@ -131,7 +131,7 @@ def main():
     max_grad_norm=0.3,  # Maximum norm for gradient clipping
     warmup_ratio=0.03,  # Ratio of total steps for warmup
     # Hub and reporting
-    push_to_hub=True,  # Whether to push model to Hugging Face Hub
+    # push_to_hub=True,  # Whether to push model to Hugging Face Hub
     report_to="trackio",  # Reporting tool for tracking metrics
   )
 
