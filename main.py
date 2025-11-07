@@ -76,7 +76,7 @@ def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, dev
 
   return output_text[0]  # Return the first decoded output text
 
-def main():
+def train():
   if not torch.cuda.is_available():
     raise RuntimeError("CUDA is not available. Training requires GPU.")
   print(f"CUDA available: {torch.cuda.is_available()}")
@@ -174,5 +174,27 @@ def main():
   # print(train_dataset[0])
   # print(output)
 
+def evaluate():
+  train_dataset, eval_dataset, test_dataset = load_dataset("chartqa", split=['train[:1%]', 'val[:1%]', 'test[:1%]'])
+
+  train_dataset = [format_data(sample) for sample in train_dataset]
+  # eval_dataset = [format_data(sample) for sample in eval_dataset]
+  # test_dataset = [format_data(sample) for sample in test_dataset]
+  
+  local_model_path = "./Qwen2-VL-7B"
+  model = Qwen2VLForConditionalGeneration.from_pretrained(
+    local_model_path,
+    device_map="auto",
+    dtype=torch.bfloat16,
+  )
+  processor = Qwen2VLProcessor.from_pretrained(local_model_path)
+
+  adapter_path = "sergiopaniego/qwen2-7b-instruct-trl-sft-ChartQA"
+  model.load_adapter(adapter_path)
+  output = generate_text_from_sample(model, processor, train_dataset[0])
+  print(train_dataset[0])
+  print(output)
+
 if __name__ == "__main__":
-  main()
+  # train()
+  evaluate()
