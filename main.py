@@ -77,6 +77,15 @@ def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, dev
   return output_text[0]  # Return the first decoded output text
 
 def main():
+  if not torch.cuda.is_available():
+    raise RuntimeError("CUDA is not available. Training requires GPU.")
+  print(f"CUDA available: {torch.cuda.is_available()}")
+  print(f"CUDA device count: {torch.cuda.device_count()}")
+  print(f"Current device: {torch.cuda.current_device()}")
+  print(f"Device name: {torch.cuda.get_device_name()}")
+  print(f"CUDA available: {torch.cuda.is_available()}")
+  print(f"Device count: {torch.cuda.device_count()}")
+  
   train_dataset, eval_dataset, test_dataset = load_dataset("chartqa", split=['train[:10%]', 'val[:10%]', 'test[:10%]'])
 
   train_dataset = [format_data(sample) for sample in train_dataset]
@@ -87,7 +96,7 @@ def main():
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16
+    bnb_4bit_compute_dtype=torch.bfloat16,
   )
   local_model_path = "./Qwen2-VL-7B"
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
@@ -98,6 +107,7 @@ def main():
     quantization_config=bnb_config,
     pad_token_id=processor.tokenizer.pad_token_id
   )
+  print(f"Model device: {model.device}")
 
   print("Tokenizer special tokens检查:")
   print(f"Pad token ID: {processor.tokenizer.pad_token_id}")
