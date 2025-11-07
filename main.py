@@ -102,7 +102,7 @@ def main():
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
   model = Qwen2VLForConditionalGeneration.from_pretrained(
     local_model_path,
-    device_map="cuda",
+    device_map="auto",
     dtype=torch.bfloat16,
     quantization_config=bnb_config,
     pad_token_id=processor.tokenizer.pad_token_id
