@@ -190,8 +190,11 @@ def evaluate():
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
   adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
-  model.load_adapter(adapter_path)
-  model.set_adapter('default')
+  # model.load_adapter(adapter_path)
+  # model.set_adapter('default')
+
+  from peft import PeftModel
+  model = PeftModel.from_pretrained(model, adapter_path)
 
   model.eval()
 
