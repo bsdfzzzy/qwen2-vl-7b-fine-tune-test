@@ -46,7 +46,7 @@ def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, dev
   text_input = processor.apply_chat_template(
       sample['messages'][1:2],  # Use the sample without the system message
       tokenize=False,
-      add_generation_prompt=True
+      add_generation_prompt=False
   )
 
   # Process the visual input from the sample
@@ -168,6 +168,8 @@ def train():
 
   trainer.train()
   trainer.save_model(training_args.output_dir)
+
+  trackio.finish()
   
   # processor = Qwen2VLProcessor.from_pretrained(local_model_path, trust_remote_code=True, use_fast=False)
   # output = generate_text_from_sample(model, processor, train_dataset[0])
@@ -205,5 +207,5 @@ def evaluate():
   print('--------------------------------')
 
 if __name__ == "__main__":
-  # train()
-  evaluate()
+  train()
+  # evaluate()
