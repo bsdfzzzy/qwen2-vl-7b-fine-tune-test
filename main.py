@@ -4,7 +4,8 @@ from transformers import BitsAndBytesConfig, Qwen2VLForConditionalGeneration, Qw
 from qwen_vl_utils import process_vision_info
 from transformers.utils import quantization_config
 from peft import LoraConfig, get_peft_model
-
+from trl import SFTConfig, SFTTrainer
+import trackio
 
 def format_data(sample):
   system_message = """You are a Vision Language Model specialized in interpreting visual data from chart images.
@@ -95,6 +96,7 @@ def main():
     dtype=torch.bfloat16,
     quantization_config=bnb_config,
   )
+  processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
   peft_config = LoraConfig(
     lora_alpha=16,
@@ -107,7 +109,51 @@ def main():
   peft_model = get_peft_model(model, peft_config)
   peft_model.print_trainable_parameters()
 
+  training_args = SFTConfig(
+    output_dir="qwen2-7b-instruct-trl-sft-ChartQA",  # Directory to save the model
+    num_train_epochs=3,  # Number of training epochs
+    per_device_train_batch_size=4,  # Batch size for training
+    per_device_eval_batch_size=4,  # Batch size for evaluation
+    gradient_accumulation_steps=8,  # Steps to accumulate gradients
+    gradient_checkpointing_kwargs={"use_reentrant": False},  # Options for gradient checkpointing
+    max_length=None,
+    # Optimizer and scheduler settings
+    optim="adamw_torch_fused",  # Optimizer type
+    learning_rate=2e-4,  # Learning rate for training
+    # Logging and evaluation
+    logging_steps=10,  # Steps interval for logging
+    eval_steps=10,  # Steps interval for evaluation
+    eval_strategy="steps",  # Strategy for evaluation
+    save_strategy="steps",  # Strategy for saving the model
+    save_steps=20,  # Steps interval for saving
+    # Mixed precision and gradient settings
+    bf16=True,  # Use bfloat16 precision
+    max_grad_norm=0.3,  # Maximum norm for gradient clipping
+    warmup_ratio=0.03,  # Ratio of total steps for warmup
+    # Hub and reporting
+    push_to_hub=True,  # Whether to push model to Hugging Face Hub
+    report_to="trackio",  # Reporting tool for tracking metrics
+  )
 
+  trackio.init(
+    project="qwen2-7b-instruct-trl-sft-ChartQA",
+    name="qwen2-7b-instruct-trl-sft-ChartQA",
+    config=training_args,
+    space_id=training_args.output_dir + "-trackio"
+  )
+
+  trainer = SFTTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
+    peft_config=peft_config,
+    processing_class=processor,
+  )
+
+  trainer.train()
+  trainer.save_model(training_args.output_dir)
+  
   # processor = Qwen2VLProcessor.from_pretrained(local_model_path, trust_remote_code=True, use_fast=False)
   # output = generate_text_from_sample(model, processor, train_dataset[0])
   # print(train_dataset[0])
