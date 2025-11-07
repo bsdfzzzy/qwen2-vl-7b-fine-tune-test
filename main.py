@@ -44,7 +44,7 @@ Focus on delivering accurate, succinct answers based on the visual information. 
 def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, device="cuda"):
   # Prepare the text input by applying the chat template
   text_input = processor.apply_chat_template(
-      sample['messages'][1:2],  # Use the sample without the system message
+      sample['messages'][:2],  # Use the sample without the system message
       tokenize=False,
       add_generation_prompt=False
   )
