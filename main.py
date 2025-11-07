@@ -189,30 +189,9 @@ def evaluate():
   )
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
-  print("=== 加载adapter前的模型信息 ===")
-  print(f"模型是否有adapters: {hasattr(model, 'peft_config')}")
-  if hasattr(model, 'peft_config'):
-    print(f"当前激活的adapters: {getattr(model, 'active_adapters', 'None')}")
-    print(f"所有adapters: {list(model.peft_config.keys()) if model.peft_config else 'None'}")
-
   adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
   model.load_adapter(adapter_path)
-
-  print("=== 加载adapter后的模型信息 ===")
-  print(f"模型是否有adapters: {hasattr(model, 'peft_config')}")
-  if hasattr(model, 'peft_config'):
-    print(f"当前激活的adapters: {getattr(model, 'active_adapters', 'None')}")
-    print(f"所有adapters: {list(model.peft_config.keys()) if model.peft_config else 'None'}")
-    
-  # 检查adapter文件是否存在
-  import os
-  if os.path.exists(adapter_path):
-    print(f"Adapter路径存在: {adapter_path}")
-    files = os.listdir(adapter_path)
-    print(f"Adapter目录下的文件: {files}")
-  else:
-    print(f"警告: Adapter路径不存在: {adapter_path}")
-  # ===== 诊断结束 =====
+  model.set_adapter('default')
 
   output = generate_text_from_sample(model, processor, train_dataset[0])
   print(train_dataset[0])
