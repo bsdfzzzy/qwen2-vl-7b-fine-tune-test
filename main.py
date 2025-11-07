@@ -127,9 +127,9 @@ def main():
   training_args = SFTConfig(
     output_dir="qwen2-7b-instruct-trl-sft-ChartQA",  # Directory to save the model
     num_train_epochs=3,  # Number of training epochs
-    per_device_train_batch_size=4,  # Batch size for training
-    per_device_eval_batch_size=4,  # Batch size for evaluation
-    gradient_accumulation_steps=8,  # Steps to accumulate gradients
+    per_device_train_batch_size=2,  # Batch size for training
+    per_device_eval_batch_size=2,  # Batch size for evaluation
+    gradient_accumulation_steps=16,  # Steps to accumulate gradients
     gradient_checkpointing_kwargs={"use_reentrant": False},  # Options for gradient checkpointing
     max_length=None,
     # Optimizer and scheduler settings
