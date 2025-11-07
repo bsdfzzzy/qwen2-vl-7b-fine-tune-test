@@ -46,7 +46,7 @@ def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, dev
   text_input = processor.apply_chat_template(
       sample['messages'][1:2],  # Use the sample without the system message
       tokenize=False,
-      add_generation_prompt=False
+      add_generation_prompt=True
   )
 
   # Process the visual input from the sample
@@ -189,8 +189,8 @@ def evaluate():
   )
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
-  adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
-  model.load_adapter(adapter_path)
+  # adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
+  # model.load_adapter(adapter_path)
   output = generate_text_from_sample(model, processor, train_dataset[0])
   print(train_dataset[0])
   print('--------------------------------')
