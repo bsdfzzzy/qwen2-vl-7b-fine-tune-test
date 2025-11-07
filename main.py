@@ -90,13 +90,14 @@ def main():
     bnb_4bit_compute_dtype=torch.bfloat16
   )
   local_model_path = "./Qwen2-VL-7B"
+  processor = Qwen2VLProcessor.from_pretrained(local_model_path)
   model = Qwen2VLForConditionalGeneration.from_pretrained(
     local_model_path,
     device_map="cuda",
     dtype=torch.bfloat16,
     quantization_config=bnb_config,
+    pad_token_id=processor.tokenizer.pad_token_id
   )
-  processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
   print("Tokenizer special tokens检查:")
   print(f"Pad token ID: {processor.tokenizer.pad_token_id}")
