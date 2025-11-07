@@ -106,8 +106,8 @@ def main():
     target_modules=["q_proj", "v_proj"],
     task_type="CAUSAL_LM",
   )
-  peft_model = get_peft_model(model, peft_config)
-  peft_model.print_trainable_parameters()
+  # peft_model = get_peft_model(model, peft_config)
+  # peft_model.print_trainable_parameters()
 
   training_args = SFTConfig(
     output_dir="qwen2-7b-instruct-trl-sft-ChartQA",  # Directory to save the model
