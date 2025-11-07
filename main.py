@@ -13,6 +13,9 @@ Your task is to analyze the provided chart image and respond to queries with con
 The charts include a variety of types (e.g., line charts, bar charts) and contain colors, labels, and text.
 Focus on delivering accurate, succinct answers based on the visual information. Avoid additional explanation unless absolutely necessary."""
 
+  print('sample:')
+  print(sample)
+
   return {
     "images": [sample["image"]],
     "messages": [
@@ -44,7 +47,7 @@ Focus on delivering accurate, succinct answers based on the visual information. 
 def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, device="cuda"):
   # Prepare the text input by applying the chat template
   text_input = processor.apply_chat_template(
-      sample['messages'][1:2],  # Use the sample without the system message
+      sample['messages'][0:2],  # Use the sample without the system message
       tokenize=False,
       add_generation_prompt=True
   )
