@@ -193,7 +193,9 @@ def evaluate():
   # model.load_adapter(adapter_path)
   output = generate_text_from_sample(model, processor, train_dataset[0])
   print(train_dataset[0])
+  print('--------------------------------')
   print(output)
+  print('--------------------------------')
 
 if __name__ == "__main__":
   # train()
