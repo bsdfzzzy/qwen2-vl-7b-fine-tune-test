@@ -189,8 +189,8 @@ def evaluate():
   )
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
-  # adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
-  # model.load_adapter(adapter_path)
+  adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
+  model.load_adapter(adapter_path)
   output = generate_text_from_sample(model, processor, train_dataset[0])
   print(train_dataset[0])
   print('--------------------------------')
