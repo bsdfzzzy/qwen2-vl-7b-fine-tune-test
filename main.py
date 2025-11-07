@@ -192,13 +192,13 @@ def evaluate():
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
   adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
-  # model.load_adapter(adapter_path)
-  # model.set_adapter('default')
+  model.load_adapter(adapter_path)
+  model.set_adapter('default')
 
-  from peft import PeftModel
-  model = PeftModel.from_pretrained(model, adapter_path)
+  # from peft import PeftModel
+  # model = PeftModel.from_pretrained(model, adapter_path)
 
-  model.eval()
+  # model.eval()
 
   output = generate_text_from_sample(model, processor, train_dataset[0])
   print(train_dataset[0])
