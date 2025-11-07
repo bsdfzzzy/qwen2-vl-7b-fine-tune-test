@@ -50,7 +50,7 @@ def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, dev
   )
 
   # Process the visual input from the sample
-  image_inputs, _ = process_vision_info(sample['images'])
+  image_inputs, _ = process_vision_info(sample['messages'])
 
   # Prepare the inputs for the model
   model_inputs = processor(
