@@ -193,6 +193,8 @@ def evaluate():
   model.load_adapter(adapter_path)
   model.set_adapter('default')
 
+  model.eval()
+
   output = generate_text_from_sample(model, processor, train_dataset[0])
   print(train_dataset[0])
   print('--------------------------------')
