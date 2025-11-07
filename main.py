@@ -44,13 +44,17 @@ Focus on delivering accurate, succinct answers based on the visual information. 
 def generate_text_from_sample(model, processor, sample, max_new_tokens=1024, device="cuda"):
   # Prepare the text input by applying the chat template
   text_input = processor.apply_chat_template(
-      sample['messages'][:2],  # Use the sample without the system message
+      sample['messages'][1:2],  # Use the sample without the system message
       tokenize=False,
-      add_generation_prompt=False
+      add_generation_prompt=True
   )
+  print('text_input:')
+  print(text_input)
 
   # Process the visual input from the sample
   image_inputs, _ = process_vision_info(sample['messages'])
+  print('image_inputs:')
+  print(image_inputs)
 
   # Prepare the inputs for the model
   model_inputs = processor(
@@ -191,12 +195,11 @@ def evaluate():
   )
   processor = Qwen2VLProcessor.from_pretrained(local_model_path)
 
-  adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
-  model.load_adapter(adapter_path)
-  model.set_adapter('default')
+  # adapter_path = "qwen2-7b-instruct-trl-sft-ChartQA"
+  # model.load_adapter(adapter_path)
+  # model.set_adapter('default')
 
-  output = generate_text_from_sample(model, processor, train_dataset[10])
-  print(train_dataset[10])
+  output = generate_text_from_sample(model, processor, train_dataset[0])
   print('--------------------------------')
   print(output)
   print('--------------------------------')
